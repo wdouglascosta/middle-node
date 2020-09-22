@@ -1,0 +1,7 @@
+[
+   {
+      "name":"I1",
+      "address":"http://localhost:8010",
+      "isClient": false
+   }
+]
