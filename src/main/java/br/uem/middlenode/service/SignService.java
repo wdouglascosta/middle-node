@@ -10,7 +10,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,7 +20,7 @@ import java.util.Arrays;
 public class SignService {
 
     private static final Log LOG = LogFactory.getLog(SignService.class);
-    private RestTemplate restTemplate = new RestTemplate();
+
 
     @Autowired
     private Properties properties;
@@ -50,10 +49,11 @@ public class SignService {
                                 .isClient(false)
                                 .build())
                         .build();
-                final String addr = subscriber.getAddress() + "/subscrible";
+                final String addr = subscriber.getAddress() + "/subscribe";
                 LOG.info("propagando inscrição para vizinho " + subscriber.getName() + " (" + addr + ")");
                 System.out.println(ownSignee.toString());
-                restTemplate.postForObject(addr, ownSignee, String.class);
+                RequestService requestService = new RequestService(addr, ownSignee);
+                requestService.run();
             }
         }
     }
@@ -97,7 +97,8 @@ public class SignService {
             if (message.getSubject() == signee.getSubject()) {
                 LOG.info("Reencaminhando Mensagem");
                 final String addr = signee.getSubscriber().getAddress() + "/message";
-                restTemplate.postForObject(addr, message, String.class);
+                RequestService requestService = new RequestService(addr, message);
+                requestService.run();
             }
         }
     }

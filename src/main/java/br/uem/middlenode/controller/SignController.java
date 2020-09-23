@@ -20,7 +20,7 @@ public class SignController {
         return "teste";
     }
 
-    @PostMapping("/subscrible")
+    @PostMapping("/subscribe")
     public String subscrible(@RequestBody Signee signee) {
         signService.subscrible(signee);
         return signee.toString();
